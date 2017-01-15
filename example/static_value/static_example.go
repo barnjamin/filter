@@ -20,7 +20,7 @@ func main() {
 		z    = generateRandomData(xVal-.2, xVal+.2, n)
 	)
 
-	k := kalman.New(1e5, math.Pow(0.01, 2), 0, 1)
+	k := kalman.New(1e-5, math.Pow(0.01, 2), 0, 1)
 
 	var raw = []float64{}
 	var vals = []float64{}

@@ -20,47 +20,39 @@ func main() {
 		z    = generateRandomData(xVal-.2, xVal+.2, n)
 	)
 
-	k := kalman.New()
+	k := kalman.New(1e5, math.Pow(0.01, 2), 0, 1)
 
-	var raw = make(plotter.XYs, n)
-	var vals = make(plotter.XYs, n)
-	for idx, val := range z {
+	var raw = []float64{}
+	var vals = []float64{}
+	for _, val := range z {
 		k.Feed(val)
-		raw = append(raw, struct {
-			X float64
-			Y float64
-		}{float64(idx), val})
-		vals = append(vals, struct {
-			X float64
-			Y float64
-		}{float64(idx), k.LastValue})
+		raw = append(raw, val)
+		vals = append(vals, k.LastValue)
 	}
 
 	p, err := plot.New()
 	if err != nil {
 		log.Fatalf("Failed to create new plot: %+v", err)
 	}
+	p.Title.Text = "Static True Value"
 	err = plotutil.AddLinePoints(p,
-		"Value", x,
-		"Raw", raw,
-		"Corrected", vals)
+		"Value", plotterize(x),
+		"Raw", plotterize(raw),
+		"Corrected", plotterize(vals))
 	if err != nil {
 		log.Fatalf("Failed to add line points: %+v", err)
 	}
 
 	// Save the plot to a PNG file.
-	if err := p.Save(4*vg.Inch, 4*vg.Inch, "points.png"); err != nil {
+	if err := p.Save(10*vg.Inch, 10*vg.Inch, "static_points.png"); err != nil {
 		panic(err)
 	}
 }
 
-func repeat(val float64, times int) plotter.XYs {
-	repeated := make(plotter.XYs, times)
+func repeat(val float64, times int) []float64 {
+	repeated := []float64{}
 	for x := 0; x < times; x++ {
-		repeated[x] = struct {
-			X float64
-			Y float64
-		}{float64(x), val}
+		repeated = append(repeated, val)
 	}
 	return repeated
 }
@@ -77,4 +69,15 @@ func generateRandomData(min, max float64, length int) []float64 {
 	}
 	return randoms
 
+}
+
+func plotterize(vals []float64) plotter.XYs {
+	plotski := make(plotter.XYs, len(vals))
+	for idx, val := range vals {
+		plotski[idx] = struct {
+			X float64
+			Y float64
+		}{float64(idx), val}
+	}
+	return plotski
 }

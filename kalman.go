@@ -1,20 +1,19 @@
 package kalman
 
-import "math"
-
 type Kalman struct {
+	Q         float64
 	R         float64 //estimate of measurement variance
 	K         float64 // Gain
 	LastValue float64
 	LastError float64
 }
 
-func New() *Kalman {
+func New(q, r, lastErr, lastVal float64) *Kalman {
 	return &Kalman{
-		R:         math.Pow(0.1, 2),
-		K:         0.0,
-		LastValue: 0.0,
-		LastError: 1.0,
+		Q:         q,
+		R:         r,
+		LastValue: lastVal,
+		LastError: lastErr,
 	}
 
 }
@@ -22,6 +21,6 @@ func New() *Kalman {
 func (k *Kalman) Feed(measurement float64) float64 {
 	k.K = k.LastError / (k.LastError + k.R)
 	k.LastValue = k.LastValue + k.K*(measurement-k.LastValue)
-	k.LastError = (1 - k.K) * k.LastError
+	k.LastError = ((1 - k.K) * k.LastError) + k.Q
 	return k.LastValue
 }

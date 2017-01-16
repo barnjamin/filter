@@ -25,9 +25,8 @@ func main() {
 	var raw = []float64{}
 	var vals = []float64{}
 	for _, val := range z {
-		k.Feed(val)
 		raw = append(raw, val)
-		vals = append(vals, k.LastValue)
+		vals = append(vals, k.Feed(val))
 	}
 
 	p, err := plot.New()

@@ -17,19 +17,20 @@ func main() {
 
 	var (
 		n       = 50
-		xVector = vectorize(1, 0.3, n)
-		z       = generateFromVector(xVector, 4, n)
+		xVector = vectorize(10, -0.3, n)
+		z       = generateFromVector(xVector, 2, n)
 	)
 
-	k := kalman.New(0.0005, 0.005, 1, 15)
+	k := kalman.New(1e-3, 0.01, 100, 11)
 
 	var raw = []float64{}
 	var vals = []float64{}
 	for _, val := range z {
-		vals = append(vals, k.LastValue)
 		raw = append(raw, val)
 
 		k.Feed(val)
+
+		vals = append(vals, k.LastValue)
 	}
 
 	p, err := plot.New()
@@ -54,7 +55,7 @@ func main() {
 
 func vectorize(start, velocity float64, length int) []float64 {
 	vectorized := []float64{}
-	for x := 1; x <= length; x++ {
+	for x := 0; x < length; x++ {
 		vectorized = append(vectorized, start+(float64(x)*velocity))
 	}
 	return vectorized

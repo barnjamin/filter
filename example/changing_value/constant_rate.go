@@ -1,9 +1,10 @@
 package main
 
 import (
-	"kalman"
 	"math/rand"
 	"time"
+
+	"github.com/barnjamin/kalman"
 
 	"github.com/gonum/plot"
 	"github.com/gonum/plot/plotter"
@@ -30,7 +31,7 @@ func main() {
 
 		k.Feed(val)
 
-		vals = append(vals, k.LastValue)
+		vals = append(vals, k.EstimateValue)
 	}
 
 	p, err := plot.New()

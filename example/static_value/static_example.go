@@ -1,10 +1,10 @@
 package main
 
 import (
-	"kalman"
 	"math"
 	"math/rand"
 
+	"github.com/barnjamin/kalman"
 	"github.com/gonum/plot"
 	"github.com/gonum/plot/plotter"
 	"github.com/gonum/plot/plotutil"

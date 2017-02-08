@@ -10,7 +10,7 @@ func TestNew(t *testing.T) {
 	u := []float64{1, 1}
 	std := []float64{.1, .1}
 
-	pf := New(5000, [][]float64{{0, .2}, {0, .2}}, Multinomial)
+	pf := New(5000, [][]float64{{0, .2}, {0, .2}}, Stratified)
 
 	for x := 1; x < 20; x++ {
 		X := (rand.Float64() * 0.1) + float64(x)

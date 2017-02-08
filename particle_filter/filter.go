@@ -68,21 +68,21 @@ func (p *ParticleFilter) Predict(u, std []float64) {
 
 }
 
-func (p *ParticleFilter) Update(measurements []float64, variance float64) {
+func (p *ParticleFilter) Update(measurements []float64, variances []float64) {
 
 	totalWeight := 0.0
 
-	g := gaussian.NewGaussian(0.0, math.Sqrt(variance))
+	g := []*gaussian.Gaussian{}
+	for _, val := range variances {
+		g = append(g, gaussian.NewGaussian(0.0, math.Sqrt(val)))
+	}
 
 	//Reweight
 	for idx, particle := range p.Particles {
-		sum := 0.0
-		for idx, m := range measurements {
-			sum += math.Pow(particle.Dimensions[idx]-m, 2)
+		for midx, m := range measurements {
+			distance := particle.Dimensions[midx] - m
+			p.Particles[idx].Weight += math.Max(g[midx].Pdf(distance), 1e-12)
 		}
-		distance := math.Sqrt(sum)
-
-		p.Particles[idx].Weight += math.Max(g.Pdf(distance), 1e-12)
 		totalWeight += p.Particles[idx].Weight
 	}
 

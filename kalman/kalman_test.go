@@ -1,7 +1,6 @@
-package kalman
+package filter
 
 import (
-	"kalman"
 	"log"
 	"math"
 	"math/rand"
@@ -17,7 +16,7 @@ func Example() {
 		initialValue = 0
 	)
 
-	k := kalman.New(q, r, initialError, initialValue)
+	k := New(q, r, initialError, initialValue)
 
 	measuredValue := func() float64 {
 		return (rand.NormFloat64()*0.3 + actualValue)

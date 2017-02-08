@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/barnjamin/kalman"
+	"github.com/barnjamin/filter/kalman"
 
 	"github.com/gonum/plot"
 	"github.com/gonum/plot/plotter"

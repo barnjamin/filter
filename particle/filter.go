@@ -68,10 +68,11 @@ func (p *ParticleFilter) Predict(u, std []float64) {
 
 }
 
-func (p *ParticleFilter) Update(measurements []float64, variances []float64) {
+func (p *ParticleFilter) Update(measurements, variances []float64) {
 
 	totalWeight := 0.0
 
+	//Build Gaussians from variances
 	g := []*gaussian.Gaussian{}
 	for _, val := range variances {
 		g = append(g, gaussian.NewGaussian(0.0, math.Sqrt(val)))
@@ -97,7 +98,9 @@ func (p *ParticleFilter) Resample() {
 		p.Particles = p.resampler(p.Particles)
 	}
 }
+
 func (p *ParticleFilter) performResample() bool {
+
 	//TODO:: add other thresholding funcs
 	sumOfSquares := 0.0
 	for _, particle := range p.Particles {

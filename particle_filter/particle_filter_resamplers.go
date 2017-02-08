@@ -9,14 +9,20 @@ type Resampler func([]Particle) []Particle
 
 func Multinomial(particles []Particle) []Particle {
 	cs := cumsum(particles)
+	totalWeight := 0.0
 
 	p := make([]Particle, len(particles))
 	for x := 0; x < len(particles); x++ {
 		idx := sort.SearchFloat64s(cs, rand.Float64())
 		p[x] = particles[idx]
+		totalWeight += p[x].Weight
 	}
 
-	return particles
+	for idx := range p {
+		p[idx].Weight /= totalWeight
+	}
+
+	return p
 }
 
 func Residual(particles []Particle) []Particle {
